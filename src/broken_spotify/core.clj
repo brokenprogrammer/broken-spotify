@@ -24,6 +24,27 @@
                                         :basic-auth [client_id client_secret]
                                         :as :json}))))
 
+(defn get-an-album 
+  ""
+  [token id] ;TODO: Should take optional argument :market
+  (client/get (str spotify-api-url "albums/" id)
+    {:query-params {}
+     :oauth-token token}))
+
+(defn get-an-albums-tracks
+  ""
+  [token id] ;TODO: Should take optional arguments: :market :limit :offset
+  (client/get (str spotify-api-url "albums/" id "/tracks")
+    {:query-params {}
+     :oauth-token token}))
+
+(defn get-albums
+  ""
+  [token ids] ;TODO: Optional argument: :market
+  (client/get (str spotify-api-url "albums/")
+    {:query-params {:ids (clojure.string/join "," ids)}
+     :oauth-token token}))
+
 (defn foo
   "I don't do a whole lot."
   [x]
