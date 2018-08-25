@@ -41,30 +41,32 @@
           (map 
             (fn [x] (if (contains? found-keys (keyword x))
               (get found-keys (keyword x))
-              x))split-url))))))
+              x)) split-url))))))
 
-(defn get-an-album 
+(defn call-builder [method]
+  (fn [endpoint m t]
+    (client/request 
+      (merge
+        { :method method
+          :url (replace-path-params m (str spotify-api-url endpoint)) 
+          :oauth-token t}
+        { :query-params (select-keys m spotify-query-params)  
+        }))))
+
+(def get-request    (call-builder :get))
+(def post-request   (call-builder :post))
+(def put-request    (call-builder :put))
+(def delete-request (call-builder :delete))
+
+; Album API Endpoints
+(def get-an-album 
   ""
-  [token id] ;TODO: Should take optional argument :market
-  (client/get (str spotify-api-url "albums/" id)
-    {:query-params {}
-     :oauth-token token}))
+  (partial get-request "albums/id"))
 
-(defn get-an-albums-tracks
+(def get-an-albums-tracks
   ""
-  [token id] ;TODO: Should take optional arguments: :market :limit :offset
-  (client/get (str spotify-api-url "albums/" id "/tracks")
-    {:query-params {}
-     :oauth-token token}))
+  (partial get-request "albums/id/tracks"))
 
-(defn get-albums
+(def get-albums
   ""
-  [token ids] ;TODO: Optional argument: :market
-  (client/get (str spotify-api-url "albums/")
-    {:query-params {:ids (clojure.string/join "," ids)}
-     :oauth-token token}))
-
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+  (partial get-request "albums/"))
