@@ -27,8 +27,7 @@
                                                       :refresh_token refresh_token}
                                         :basic-auth [client_id client_secret]
                                         :as :json}))))
-
-;TODO: Test this properly.. 
+ 
 (defn replace-path-params
   "TODO: Add documentation."
   [params url]
@@ -91,3 +90,24 @@
   
   Example: (get-albums {:ids \"41MnTivkwTO3UUJ8DrqEJJ,6JWc4iAiJ9FjyK0B59ABb4,6UXCm6bOO4gFlDQZV5yL37\" :market \"SE\"} \"OAUTH-TOKEN\")"
   (partial get-request "albums/"))
+
+; Artist API Endpoints
+(def get-an-artist
+  ""
+  (partial get-request "/artists/id"))
+
+(def get-an-artists-albums
+  ""
+  (partial get-request "/artists/id/albums"))
+
+(def get-an-artists-top-tracks
+  ""
+  (partial get-request "/artists/id/top-tracks"))
+
+(def get-an-artists-related-artists
+  ""
+  (partial get-request "/artists/id/related-artists"))
+
+(def get-artists
+  ""
+  (partial get-request "/artists"))
