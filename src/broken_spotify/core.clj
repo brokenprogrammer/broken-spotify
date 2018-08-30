@@ -27,8 +27,7 @@
                                                       :refresh_token refresh_token}
                                         :basic-auth [client_id client_secret]
                                         :as :json}))))
-
-;TODO: Test this properly.. 
+ 
 (defn replace-path-params
   "TODO: Add documentation."
   [params url]
@@ -91,3 +90,55 @@
   
   Example: (get-albums {:ids \"41MnTivkwTO3UUJ8DrqEJJ,6JWc4iAiJ9FjyK0B59ABb4,6UXCm6bOO4gFlDQZV5yL37\" :market \"SE\"} \"OAUTH-TOKEN\")"
   (partial get-request "albums/"))
+
+; Artist API Endpoints
+(def get-an-artist
+  "Get Spotify catalog information for a single artist identified by their 
+  unique Spotify ID. Takes two arguments, a map with all the path and query parameters 
+  and a oauth-token. Required key in the mas is :id.
+  :id The Spotify ID for the artist.
+  
+  Example: (get-an-artist {:id \"0OdUWJ0sBjDrqHygGUXeCF\"} \"OAUTH-TOKEN\")"
+  (partial get-request "artists/id"))
+
+(def get-an-artists-albums
+  "Get Spotify catalog information about an artist’s albums. Takes two 
+  arguments, a map with all the path and query parameters and a oauth-token.
+  Required key in the map is :id, optional keys are :include_groups	:market :limit
+  and :offset.
+  :id The Spotify ID for the artist.
+  :include_groups A comma-separated list of keywords that will be used to filter the response.
+  :market An ISO 3166-1 alpha-2 country code.
+  :limit The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50.
+  :offset The index of the first album to return. Default: 0
+  
+  Example: (get-an-artists-albums {:id \"0OdUWJ0sBjDrqHygGUXeCF\" :market \"SE\" :include_groups [\"single\"] :limit 2 :offset 5} \"OAUTH-TOKEN\")"
+  (partial get-request "artists/id/albums"))
+
+(def get-an-artists-top-tracks
+  "Get Spotify catalog information about an artist’s top tracks by country.
+  Takes two arguments, a map with all the path and query parameters and a oauth-token.
+  Required key in the map is :id, optional key is :market.
+  :id The Spotify ID for the artist.
+  :market An ISO 3166-1 alpha-2 country code.
+  
+  Example: (get-an-artists-top-tracks {:id \"0OdUWJ0sBjDrqHygGUXeCF\" :market \"SE\"} \"OAUTH-TOKEN\")"
+  (partial get-request "artists/id/top-tracks"))
+
+(def get-an-artists-related-artists
+  "Get Spotify catalog information about artists similar to a given artist. 
+  Takes two arguments, a map with all the path and query parameters and a oauth-token.
+  Required key in the map is :id.
+  :id The Spotify ID for the artist.
+  
+  Example: (get-an-artists-related-artists {:id \"0OdUWJ0sBjDrqHygGUXeCF\"} \"OAUTH-TOKEN\")"
+  (partial get-request "artists/id/related-artists"))
+
+(def get-artists
+  "Get Spotify catalog information for several artists based on their Spotify IDs. Takes
+  two arguments, a map with all the path and query parameters and a oauth-token.
+  Required key in the map is :ids.
+  :ids A comma-separated list of the Spotify IDs for the artists. Maximum: 50 IDs.
+  
+  Example: (get-artists {:ids \"0oSGxfWSnnOXhD2fKuz2Gy,3dBVyJ7JuOMt4GE9607Qin\"]} \"OAUTH-TOKEN\")"
+  (partial get-request "artists/"))
