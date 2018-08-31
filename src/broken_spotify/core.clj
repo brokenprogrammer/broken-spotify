@@ -153,7 +153,7 @@
   :locale The desired language, consisting of an ISO 639-1 language code and an 
     ISO 3166-1 alpha-2 country code, joined by an underscore. 
   
-  Example: "
+  Example: (get-a-category {:category_id \"dinner\" :country \"SE\" :locale \"sv_SE\"} \"OAUTH-TOKEN\")"
   (partial get-request "browse/categories/category_id"))
 
 (def get-a-categorys-playlists
@@ -165,7 +165,7 @@
   :limit The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50.
   :offset The index of the first album to return. Default: 0.
 
-  Example: "
+  Example: (get-a-categorys-playlists {:category_id \"party\" :country \"BR\" :limit 2 :offset 5} \"OAUTH-TOKEN\")"
   (partial get-request "browse/categories/category_id/playlists"))
 
 (def get-categories
@@ -178,7 +178,7 @@
   :limit The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50.
   :offset The index of the first album to return. Default: 0.
   
-  Example: "
+  Example: (get-categories {:country \"SE\" :locale \"sv_SE\" :limit 10 :offset 5} \"OAUTH-TOKEN\")"
   (partial get-request "browse/categories"))
 
 (def get-featured-playlists
@@ -192,7 +192,7 @@
   :limit The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50.
   :offset The index of the first album to return. Default: 0.
   
-  Example: "
+  Example: (get-featured-playlists {:country \"SE\" :locale \"sv_SE\" :timestamp \"2014-10-23T09:00:00\" :limit 2 :offset 5} \"OAUTH-TOKEN\")"
   (partial get-request "browse/featured-playlists"))
 
 (def get-new-releases
@@ -203,7 +203,7 @@
   :limit The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50.
   :offset The index of the first album to return. Default: 0.
   
-  Example: "
+  Example: (get-new-releases {:country \"SE\" :limit 10 :offset 5} \"OAUTH-TOKEN\")"
   (partial get-request "browse/new-releases"))
 
 ; TODO: Unimplemented
