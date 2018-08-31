@@ -142,3 +142,71 @@
   
   Example: (get-artists {:ids \"0oSGxfWSnnOXhD2fKuz2Gy,3dBVyJ7JuOMt4GE9607Qin\"]} \"OAUTH-TOKEN\")"
   (partial get-request "artists/"))
+
+; Browse API Endpoints
+(def get-a-category
+  "Get a single category used to tag items in Spotify. Takes two
+  arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :category_id, optional paramenters are :country and :locale.
+  :category_id The Spotify category ID for the category.
+  :country A country: an ISO 3166-1 alpha-2 country code.
+  :locale The desired language, consisting of an ISO 639-1 language code and an 
+    ISO 3166-1 alpha-2 country code, joined by an underscore. 
+  
+  Example: "
+  (partial get-request "browse/categories/category_id"))
+
+(def get-a-categorys-playlists
+  "Get a list of Spotify playlists tagged with a particular category. Takes two
+  arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :category_id, optional paramenters are :country, :limit and :offset.
+  :category_id The Spotify category ID for the category.
+  :country A country: an ISO 3166-1 alpha-2 country code.
+  :limit The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50.
+  :offset The index of the first album to return. Default: 0.
+
+  Example: "
+  (partial get-request "browse/categories/category_id/playlists"))
+
+(def get-categories
+  "Get a list of categories used to tag items in Spotify. Takes two
+  arguments, a map with the path and query parameters and a oauth-token.
+  Optional parameters are :country, :locale, :limit and :offset.
+  :country A country: an ISO 3166-1 alpha-2 country code.
+  :locale The desired language, consisting of an ISO 639-1 language code and an 
+    ISO 3166-1 alpha-2 country code, joined by an underscore. 
+  :limit The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50.
+  :offset The index of the first album to return. Default: 0.
+  
+  Example: "
+  (partial get-request "browse/categories"))
+
+(def get-featured-playlists
+  "Get a list of Spotify featured playlists. Takes two
+  arguments, a map with the path and query parameters and a oauth-token.
+  Optional parameters are :locale, :country, :timestamp, :limit and :offset.
+  :locale The desired language, consisting of an ISO 639-1 language code and an 
+    ISO 3166-1 alpha-2 country code, joined by an underscore.
+  :country A country: an ISO 3166-1 alpha-2 country code.
+  :timestamp A timestamp in ISO 8601 format: yyyy-MM-ddTHH:mm:ss.
+  :limit The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50.
+  :offset The index of the first album to return. Default: 0.
+  
+  Example: "
+  (partial get-request "browse/featured-playlists"))
+
+(def get-new-releases
+  "Get a list of new album releases featured in Spotify. Takes two
+  arguments, a map with the path and query parameters and a oauth-token.
+  Optional parameters are :country, :limit and :offset.
+  :country A country: an ISO 3166-1 alpha-2 country code.
+  :limit The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50.
+  :offset The index of the first album to return. Default: 0.
+  
+  Example: "
+  (partial get-request "browse/new-releases"))
+
+; TODO: Unimplemented
+(def get-recommendations
+  ""
+  (partial get-request "recommendations/"))
