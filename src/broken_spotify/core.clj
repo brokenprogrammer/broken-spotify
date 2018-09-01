@@ -6,7 +6,7 @@
 (def spotify-api-token-url "https://accounts.spotify.com/api/token")
 
 (def spotify-path-params [:id :category_id :owner_id :playlist_id :user_id])
-(def spotify-query-params [:market :limit :offset :ids])
+(def spotify-query-params [:market :limit :offset :ids :q :type])
 
 (defn get-access-token
   "Requests an access token from Spotify by following the Client Credentials Flow.
@@ -210,3 +210,210 @@
 (def get-recommendations
   ""
   (partial get-request "recommendations/"))
+
+; Follow API Endpoints
+(def user-follows-artist-or-users?
+  ""
+  (partial get-request "me/following/contains"))
+
+(def user-follows-playlist?
+  ""
+  (partial get-request "users/owner_id/playlists/playlist_id/followers/contains"))
+
+(def follow-artist-or-user
+  ""
+  (partial put-request "me/following"))
+
+(def follow-playlist
+  ""
+  (partial put-request "playlists/playlist_id/followers"))
+
+(def get-followed-artists
+  ""
+  (partial get-request "me/following?type=artist"))
+  
+(def unfollow-artist-or-users
+  ""
+  (partial delete-request "me/following"))
+
+(def unfollow-playlist
+  ""
+  (partial delete-request "playlists/playlist_id/followers"))
+
+; Library API Endpoints
+(def is-saved-albums? 
+  ""
+  (partial get-request "me/albums/contains"))
+
+(def is-saved-tracks?
+  ""
+  (partial get-request "me/tracks/contains"))
+
+(def get-saved-albums
+  ""
+  (partial get-request "me/albums"))
+
+(def get-saved-tracks
+  ""
+  (partial get-request "me/tracks"))
+
+;TODO: Implement, function that builds parameters will get confused of ids=ids
+(def remove-saved-albums
+  ""
+  (partial delete-request "me/albums?ids=ids"))
+
+(def remove-saved-tracks
+  ""
+  (partial delete-request "me/tracks"))
+
+;TODO: Implement
+(def save-albums
+  ""
+  (partial put-request "me/albums?ids=ids"))
+
+(def save-tracks
+  ""
+  (partial put-request "me/tracks"))
+
+; Personalization API Endpoints
+;TODO: Implement, api params doesn't support type yet.
+(def get-users-top-artist-and-tracks
+  ""
+  (partial get-request "me/top/type"))
+
+; Player API Endpoints
+(def get-available-devices
+  ""
+  (partial get-request "me/player/devices"))
+
+(def get-current-playback-info
+  ""
+  (partial get-request "me/player"))
+
+(def get-recently-played-tracks
+  ""
+  (partial get-request "me/player/recently-played"))
+
+(def get-currently-playing-track
+  ""
+  (partial get-request "me/player/currently-playing"))
+
+(def pause-user-playback
+  ""
+  (partial put-request "me/player/pause"))
+
+(def player-seek-to
+  ""
+  (partial put-request "me/player/seek"))
+
+(def player-toggle-repeat
+  ""
+  (partial put-request "me/player/repeat"))
+
+(def player-set-volume
+  ""
+  (partial put-request "me/player/volume"))
+
+(def player-next-track
+  ""
+  (partial post-request "me/player/next"))
+
+(def player-previous-track
+  ""
+  (partial post-request "me/player/previous"))
+
+(def player-start-resume-playback
+  ""
+  (partial put-request "me/player/play"))
+
+(def player-toggle-shuffle
+  ""
+  (partial put-request "me/player/shuffle"))
+
+(def player-transfer-playback
+  ""
+  (partial put-request "me/player"))
+
+; Playlists API Endpoints
+(def add-tracks-to-playlist
+  ""
+  (partial post-request "playlists/playlist_id/tracks"))
+
+(def change-playlist-details
+  ""
+  (partial put-request "playlists/playlist_id"))
+
+(def create-playlist
+  ""
+  (partial post-request "users/user_id/playlists"))
+
+(def get-playlists
+  ""
+  (partial get-request "me/playlists"))
+
+(def get-users-playlists
+  ""
+  (partial get-request "users/user_id/playlists"))
+
+(def get-playlist-cover-image
+  ""
+  (partial get-request "playlists/playlist_id/images"))
+
+(def get-playlist
+  ""
+  (partial get-request "playlists/playlist_id"))
+
+(def get-playlist-tracks
+  ""
+  (partial get-request "playlists/playlist_id/tracks"))
+
+(def remove-tracks-from-playlist
+  ""
+  (partial delete-request "playlists/playlist_id/tracks"))
+
+(def reorder-playlist-tracks
+  ""
+  (partial put-request "playlists/playlist_id/tracks"))
+
+(def replace-playlist-tracks
+  ""
+  (partial put-request "playlists/playlist_id/tracks"))
+
+(def upload-playlist-cover-image
+  ""
+  (partial put-request "playlists/playlist_id/images"))
+
+; Search API Endpoints
+(def search
+  ""
+  (partial get-request "search/"))
+
+; Tracks API Endpoints
+(def get-audio-analysis
+  ""
+  (partial get-request "audio-analysis/id"))
+
+(def get-track-audio-features
+  ""
+  (partial get-request "audio-features/id"))
+
+(def get-tracks-audio-features
+  ""
+  (partial get-request "audio-features/"))
+
+(def get-tracks
+  ""
+  (partial get-request "tracks/"))
+
+(def get-track
+  ""
+  (partial get-request "tracks/id"))
+
+; Users Profile API Endpoints
+(def get-current-user-profile
+  ""
+  (partial get-request "me/"))
+
+(def get-user-profile
+  ""
+  (partial get-request "users/user_id"))
