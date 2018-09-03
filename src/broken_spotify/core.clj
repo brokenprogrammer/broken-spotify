@@ -13,20 +13,22 @@
   Only endpoints that do not access user information can be accessed using the
   recieved access token. To access user information use OAuth 2 Authorization."
   [client_id client_secret]
-  (let [m (client/post spotify-api-token-url {:form-params {:grant_type "client_credentials"}
-                                              :basic-auth [client_id client_secret]
-                                              :as :json})]
-    (get-in m [:body :access_token])))
+  (-> (client/post spotify-api-token-url {:form-params {:grant_type "client_credentials"}
+                                          :basic-auth [client_id client_secret]
+                                          :as :json})
+    :body
+    :access_token))
 
 (defn refresh-access-token
   "Refreshes an access token using the refresh token that was retrieved during
   the OAuth 2 Authorization."
   [client_id client_secret refresh_token]
-  (let [m (client/post spotify-api-token-url {:form-params {:grant_type "refresh_token"
-                                                            :refresh_token refresh_token}
-                                              :basic-auth [client_id client_secret]
-                                              :as :json})]
-    (get-in m [:body :access_token])))
+  (-> (client/post spotify-api-token-url {:form-params {:grant_type "refresh_token"
+                                                        :refresh_token refresh_token}
+                                          :basic-auth [client_id client_secret]
+                                          :as :json})
+      :body
+      :access_token))
 
 (defn replace-path-params
   "TODO: Add documentation."
@@ -35,12 +37,7 @@
     ""
     (let [found-keys (select-keys params spotify-path-params)
           split-url (string/split (string/replace url "https://" "") #"/")]
-      (-> (map 
-            (fn [x] 
-              (if (contains? found-keys (keyword x)) 
-                  (get found-keys (keyword x)) 
-                  x)) 
-            split-url)
+      (-> (map (fn [x] (get-in found-keys [(keyword x)] x)) split-url)
           (#(string/join "/" %))
           (#(str "https://" %))))))
 
