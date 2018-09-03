@@ -45,6 +45,7 @@
   (fn [endpoint m t]
     (client/request 
       { :method method
+        :content-type :json ;TODO: In future when images are being sent there needs to be a check here.
         :url (replace-path-params m (str spotify-api-url endpoint)) 
         :oauth-token t
         :query-params (select-keys m spotify-query-params)  
@@ -211,31 +212,74 @@
 
 ; Follow API Endpoints
 (def user-follows-artist-or-users?
-  ""
+  "Check to see if the current user is following one or more artists or other Spotify users.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required keys in the map is :ids and :type.
+  :ids A comma-separated list of the artist or the user Spotify IDs to check.
+  :type The ID type, either artist or user.
+  
+  Example: (user-follows-artist-or-user? {:ids \"74ASZWbe4lXaubB36ztrGX,08td7MxkoHQkXnWAYD8d6\" :type \"artist\"} \"OAUTH-TOKEN\")"
   (partial get-request "me/following/contains"))
 
 (def user-follows-playlist?
-  ""
+  "Check to see if one or more Spotify users are following a specified playlist.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required keys in the map is :ids, :owner_id and :playlist_id.
+  :ids A comma-separated list of the artist or the user Spotify IDs to check.
+  :owner_id The Spotify user ID of the person who owns the playlist.
+  :playlist_id The Spotify ID of the playlist.
+
+  Example: (user-follows-playlist? {:ids \"possan,elogain\" :owner_id \"OWNER_ID\" :playlist_id \"2v3iNvBX8Ay1Gt2uXtUKUT\"} \"OAUTH-TOKEN\")"
   (partial get-request "users/owner_id/playlists/playlist_id/followers/contains"))
 
 (def follow-artist-or-user
-  ""
+  "Add the current user as a follower of one or more artists or other Spotify users.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required keys in the map is :ids and :type.
+  :ids A comma-separated list of the artist or the user Spotify IDs to check.
+  :type The ID type, either artist or user.
+
+  Example: (follow-artist-or-user {:ids \"exampleuser01\" :type \"user\"} \"OAUTH-TOKEN\")"
   (partial put-request "me/following"))
 
 (def follow-playlist
-  ""
+  "Add the current user as a follower of a playlist. Takes two arguments,
+  a map with the path and query parameters and a oauth-token. Required key in
+  map is :playlist_id.
+  :playlist_id The Spotify ID of the playlist, Any playlist can be followed,
+    regardless of its public/private status, as long as you know its playlist ID.
+
+  Example: (follow-playlist {:playlist_id \"2v3iNvBX8Ay1Gt2uXtUKUT\"} \"OAUTH-TOKEN\")"
   (partial put-request "playlists/playlist_id/followers"))
 
 (def get-followed-artists
-  ""
-  (partial get-request "me/following?type=artist"))
+  "Get the current user’s followed artists. Takes two arguments, a map with the
+  path and query parameters and a oauth-token. Required key in the map is :type and
+  optional keys are :limit and :after.
+  :type The ID type: currently only artist is supported.
+  :limit The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.
+  :after The last artist ID retrieved from the previous request.
+
+  Example: (get-followed-artists {:type \"artist\" :limit 50 :after 50} \"OAUTH-TOKEN\")"
+  (partial get-request "me/following"))
   
 (def unfollow-artist-or-users
-  ""
+  "Remove the current user as a follower of one or more artists or other Spotify users.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required keys in the map are :ids and :type.
+  :ids A comma-separated list of the artist or the user Spotify IDs to check.
+  :type The ID type: either artist or user.
+
+  Example: (unfollow-artist-or-users {:ids \"exampleuser01\" :type \"user\"} \"OAUTH-TOKEN\")"
   (partial delete-request "me/following"))
 
 (def unfollow-playlist
-  ""
+  "Remove the current user as a follower of a playlist.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :playlist_id.
+  :playlist_id The Spotify ID of the playlist that is to be no longer followed.
+
+  Example: (unfollow-playlist {:playlist_id \"2v3iNvBX8Ay1Gt2uXtUKUT\"} \"OAUTH-TOKEN\")"
   (partial delete-request "playlists/playlist_id/followers"))
 
 ; Library API Endpoints
