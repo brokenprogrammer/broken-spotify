@@ -36,10 +36,11 @@
   (if (string/blank? url)
     ""
     (let [found-keys (select-keys params spotify-path-params)
-          split-url (string/split (string/replace url "https://" "") #"/")]
-      (-> (map (fn [x] (get-in found-keys [(keyword x)] x)) split-url)
-          (#(string/join "/" %))
-          (#(str "https://" %))))))
+          split-url (string/split (string/replace url "https://" "") #"/")
+          replace-key-if-exist (fn [x] (get-in found-keys [(keyword x)] x))]
+      (->> (map replace-key-if-exist split-url)
+           (string/join "/")
+           (str "https://")))))
 
 (defn call-builder [method]
   (fn [endpoint m t]
