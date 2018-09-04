@@ -428,7 +428,16 @@
 
 ; Search API Endpoints
 (def search
-  ""
+  "Get Spotify Catalog information about artists, albums, tracks or playlists that match a keyword string.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required keys in map are :q and :type, optional keys are :market, :limit and :offset.
+  :q Search query keywords and optional field filters and operators. 
+  :type A comma-separated list of item types to search across. Valid types are: album , artist, playlist, and track.
+  :market An ISO 3166-1 alpha-2 country code.
+  :limit Maximum number of results to return. Default: 20 Minimum: 1 Maximum: 50. 
+  :offset The index of the first result to return. Default: 0. Maximum offset: 10,000. 
+
+  Example: (search {:q \"tania bowra\" :type \"artist\"  :market \"SE\"  :limit 50 :offset 5} \"OAUTH-TOKEN\")"
   (partial get-request "search/"))
 
 ; Tracks API Endpoints
