@@ -285,37 +285,79 @@
 
 ; Library API Endpoints
 (def is-saved-albums? 
-  ""
+  "Check if one or more albums is already saved in the current Spotify user’s ‘Your Music’ library.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :ids.
+  :ids A comma-separated list of the Spotify IDs for the albums. Maximum: 50 IDs.
+
+  Example: (is-saved-albums? {:ids \"0pJJgBzj26qnE1nSQUxaB0,5ZAKzV4ZIa5Gt7z29OYHv0\"} \"OAUTH-TOKEN\")"
   (partial get-request "me/albums/contains"))
 
 (def is-saved-tracks?
-  ""
+  "Check if one or more tracks is already saved in the current Spotify user’s ‘Your Music’ library.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :ids.
+  :ids A comma-separated list of the Spotify IDs for the albums. Maximum: 50 IDs.
+  
+  Example: (is-saved-tracks? {:ids \"0udZHhCi7p1YzMlvI4fXoK,3SF5puV5eb6bgRSxBeMOk9\"} \"OAUTH-TOKEN\")"
   (partial get-request "me/tracks/contains"))
 
 (def get-saved-albums
-  ""
+  "Get a list of the albums saved in the current Spotify user’s ‘Your Music’ library.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Optional keys in the map is :limit, :offset and :market.
+  :limit The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50.
+  :offset The index of the first object to return. Default: 0.
+  :market An ISO 3166-1 alpha-2 country code or the string from_token. 
+  
+  Example: (get-saved-albums {:limit 1 :offset 5} \"OAUTH-TOKEN\")"
   (partial get-request "me/albums"))
 
 (def get-saved-tracks
-  ""
+  "Get a list of the songs saved in the current Spotify user’s ‘Your Music’ library.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Optional keys in the map is :limit, :offset and :market.
+  :limit The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50.
+  :offset The index of the first object to return. Default: 0.
+  :market An ISO 3166-1 alpha-2 country code or the string from_token. 
+  
+  Example: (get-saved-tracks {:limit 1 :offset 5 :market \"ES\"} \"OAUTH-TOKEN\")"
   (partial get-request "me/tracks"))
 
-;TODO: Implement, function that builds parameters will get confused of ids=ids
 (def remove-saved-albums
-  ""
-  (partial delete-request "me/albums?ids=ids"))
+  "Remove one or more albums from the current user’s ‘Your Music’ library.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :ids.
+  :ids A comma-separated list of the Spotify IDs. Maximum 50.
+  
+  Example: (remove-saved-albums {:ids \"4iV5W9uYEdYUVa79Axb7Rh,1301WleyT98MSxVHPZCA6M\"} \"OAUTH-TOKEN\")"
+  (partial delete-request "me/albums"))
 
 (def remove-saved-tracks
-  ""
+  "Remove one or more tracks from the current user’s ‘Your Music’ library.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :ids.
+  :ids A comma-separated list of the Spotify IDs. Maximum 50.
+  
+  Example: (remove-saved-tracks {:ids \"4iV5W9uYEdYUVa79Axb7Rh,1301WleyT98MSxVHPZCA6M\"} \"OAUTH-TOKEN\")"
   (partial delete-request "me/tracks"))
 
-;TODO: Implement
 (def save-albums
-  ""
-  (partial put-request "me/albums?ids=ids"))
+  "Save one or more albums to the current user’s ‘Your Music’ library.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :ids.
+  :ids A comma-separated list of the Spotify IDs. Maximum 50.
+
+  Example: (save-albums {:ids \"4iV5W9uYEdYUVa79Axb7Rh,1301WleyT98MSxVHPZCA6M\"} \"OAUTH-TOKEN\")"
+  (partial put-request "me/albums"))
 
 (def save-tracks
-  ""
+  "Save one or more tracks to the current user’s ‘Your Music’ library.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :ids.
+  :ids A comma-separated list of the Spotify IDs. Maximum 50.
+
+  Example: (save-tracks {:ids \"4iV5W9uYEdYUVa79Axb7Rh,1301WleyT98MSxVHPZCA6M\"} \"OAUTH-TOKEN\")"
   (partial put-request "me/tracks"))
 
 ; Personalization API Endpoints
