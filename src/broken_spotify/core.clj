@@ -6,7 +6,7 @@
 (def spotify-api-token-url "https://accounts.spotify.com/api/token")
 
 (def spotify-path-params [:id :category_id :owner_id :playlist_id :user_id])
-(def spotify-query-params [:market :limit :offset :ids :q :type])
+(def spotify-query-params [:market :limit :offset :ids :q :type :device_id :position_ms :state :volume_percent])
 
 (defn get-access-token
   "Requests an access token from Spotify by following the Client Credentials Flow.
@@ -368,53 +368,128 @@
 
 ; Player API Endpoints
 (def get-available-devices
-  ""
+  "Get information about a user’s available devices.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  There are no keys in the map.
+
+  Example: (get-available-devices {} \"OAUTH-TOKEN\")"
   (partial get-request "me/player/devices"))
 
 (def get-current-playback-info
-  ""
+  "Get information about the user’s current playback state, including track, track progress, and active device.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Optional key in the map is :market.
+  :market An ISO 3166-1 alpha-2 country code or the string from_token.
+  
+  Example: (get-current-playback-info {:market \"ES\"} \"OAUTH-TOKEN\")"
   (partial get-request "me/player"))
 
 (def get-recently-played-tracks
-  ""
+  "Get tracks from the current user’s recently played tracks.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Optional keys in the map is :limit, :after and :before.
+  :limit The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.
+  :after A Unix timestamp in milliseconds.
+  :before A Unix timestamp in milliseconds.
+  
+  Example: (get-recently-played-tracks {:limit 10 :after 1484811043508} \"OAUTH-TOKEN\")"
   (partial get-request "me/player/recently-played"))
 
 (def get-currently-playing-track
-  ""
+  "Get the object currently being played on the user’s Spotify account.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Optional key in the map is :market.
+  :market An ISO 3166-1 alpha-2 country code or the string from_token.
+  
+  Example: (get-currently-playing-track {:market \"ES\"} \"OAUTH-TOKEN\")"
   (partial get-request "me/player/currently-playing"))
 
 (def pause-user-playback
-  ""
+  "Pause playback on the user’s account.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Optional key in the map is :device_id.
+  :device_id The id of the device this command is targeting.
+    If not supplied, the user’s currently active device is the target.
+  
+  Example: (pause-user-playback {:device_id \"0d1841b0976bae2a3a310dd74c0f3df354899bc8\"} \"OAUTH-TOKEN\")"
   (partial put-request "me/player/pause"))
 
 (def player-seek-to
-  ""
+  "Seeks to the given position in the user’s currently playing track.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :position_ms. Optional key is :device_id.
+  :position_ms  The position in milliseconds to seek to.
+  :device_id The id of the device this command is targeting.
+    If not supplied, the user’s currently active device is the target.
+
+  Example: (player-seek-to {:position_ms 25000} \"OAUTH-TOKEN\")"
   (partial put-request "me/player/seek"))
 
 (def player-toggle-repeat
-  ""
+  "Set the repeat mode for the user’s playback. Options are repeat-track, repeat-context, and off.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :state. Optional key is :device_id.
+  :state track, context or off. track will repeat the current track. context will repeat the current context.
+    off will turn repeat off.
+  :device_id The id of the device this command is targeting.
+    If not supplied, the user’s currently active device is the target.
+
+  Example: (player-toggle-repeat {:state \"context\"} \"OAUTH-TOKEN\")"
   (partial put-request "me/player/repeat"))
 
 (def player-set-volume
-  ""
+  "Set the volume for the user’s current playback device.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key is :volume_percent. Optional key is :device_id.
+  :volume_percent Integer. The volume to set. Must be a value from 0 to 100 inclusive.
+  :device_id The id of the device this command is targeting.
+    If not supplied, the user’s currently active device is the target.
+  
+  Example: (player-set-volume {:volume_percent 50} \"OAUTH-TOKEN\")"
   (partial put-request "me/player/volume"))
 
 (def player-next-track
-  ""
+  "Skips to next track in the user’s queue.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Optional key in the map is :device_id.
+  :device_id The id of the device this command is targeting.
+    If not supplied, the user’s currently active device is the target.
+  
+  Example: (player-next-track {} \"OAUTH-TOKEN\")"
   (partial post-request "me/player/next"))
 
 (def player-previous-track
-  ""
+  "Skips to previous track in the user’s queue.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Optional key in the map is :device_id.
+  :device_id The id of the device this command is targeting.
+    If not supplied, the user’s currently active device is the target.
+  
+  Example: (player-previous-track {} \"OAUTH-TOKEN\")"
   (partial post-request "me/player/previous"))
 
 (def player-start-resume-playback
-  ""
+  "Start a new context or resume current playback on the user’s active device.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Optional key in the map is :device_id.
+  :device_id The id of the device this command is targeting.
+    If not supplied, the user’s currently active device is the target.
+  
+  Example: (player-start-resume-playback {} \"OAUTH-TOKEN\")"
   (partial put-request "me/player/play"))
 
 (def player-toggle-shuffle
-  ""
+  "Toggle shuffle on or off for user’s playback.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :state. Optional key in the map is device_id.
+  :state true: shuffle user's playback. false: Do not shuffle user's playback.
+  :device_id The id of the device this command is targeting.
+    If not supplied, the user’s currently active device is the target.
+  
+  Example: (player-toggle-shuffle {:state true} \"OAUTH-TOKEN\")"
   (partial put-request "me/player/shuffle"))
 
+; TODO: Implement body parameters for endpoints.
 (def player-transfer-playback
   ""
   (partial put-request "me/player"))
