@@ -6,7 +6,7 @@
 (def spotify-api-token-url "https://accounts.spotify.com/api/token")
 
 (def spotify-path-params [:id :category_id :owner_id :playlist_id :user_id])
-(def spotify-query-params [:market :limit :offset :ids :q :type :device_id :position_ms :state :volume_percent])
+(def spotify-query-params [:market :limit :offset :ids :q :type :device_id :position_ms :state :volume_percent :position :uris :fields])
 
 (defn get-access-token
   "Requests an access token from Spotify by following the Client Credentials Flow.
@@ -496,49 +496,119 @@
 
 ; Playlists API Endpoints
 (def add-tracks-to-playlist
-  ""
+  "Add one or more tracks to a user’s playlist.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :playlist_id. Optional keys are :uris and :position.
+  :playlist_id The Spotify ID for the playlist.
+  :uris A comma-separated list of Spotify track URIs to add.
+  :position The position to insert the tracks, a zero-based index. 
+  
+  Example: (add-tracks-to-playlist {:playlist_id \"3cEYpjA9oz9GiPac4AsH4n\" :position 0 :uris \"spotify:track:4iV5W9uYEdYUVa79Axb7Rh,spotify:track:1301WleyT98MSxVHPZCA6M\"} \"OAUTH-TOKEN\")"
   (partial post-request "playlists/playlist_id/tracks"))
 
+;TODO: Request body
 (def change-playlist-details
-  ""
+  "Change a playlist’s name and public/private state. (The user must, of course, own the playlist.)
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :playlist_id.
+  :playlist_id The Spotify ID for the playlist.
+  
+  Example: (change-playlist-details {:playlist_id \"3cEYpjA9oz9GiPac4AsH4n\"} \"OAUTH-TOKEN\")"
   (partial put-request "playlists/playlist_id"))
 
+;TODO: Request body
 (def create-playlist
-  ""
+  "Create a playlist for a Spotify user. (The playlist will be empty until you add tracks.)
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :user_id.
+  :user_id The user’s Spotify user ID.
+  
+  Example: (create-playlist {:user_id \"A-USER-ID\"} \"OAUTH-TOKEN\")"
   (partial post-request "users/user_id/playlists"))
 
 (def get-playlists
-  ""
+  "Get a list of the playlists owned or followed by the current Spotify user.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Optional keys in the map is :limit and :offset.
+  :limit The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50.
+  :offset The index of the first playlist to return. Default: 0
+  
+  Example: (get-playlists {:limit 20 :offset 5} \"OAUTH-TOKEN\")"
   (partial get-request "me/playlists"))
 
 (def get-users-playlists
-  ""
+  "Get a list of the playlists owned or followed by a Spotify user.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :user_id. Optional keys are :limit and :offset.
+  :user_id The user’s Spotify user ID.
+  :limit The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50.
+  :offset The index of the first playlist to return. Default: 0
+  
+  Example: (get-users-playlists {:user_id \"AN-USER-ID\" :limit 20 :offset 5} \"OAUTH-TOKEN\")"
   (partial get-request "users/user_id/playlists"))
 
 (def get-playlist-cover-image
-  ""
+  "Get the current image associated with a specific playlist.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :playlist_id.
+  :playlist_id The Spotify ID for the playlist.
+  
+  Example: (get-playlist-cover-image {:playlist_id \"3cEYpjA9oz9GiPac4AsH4n\"} \"OAUTH-TOKEN\")"
   (partial get-request "playlists/playlist_id/images"))
 
 (def get-playlist
-  ""
+  "Get a playlist owned by a Spotify user.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :playlist_id. Optional keys are :fields and :market
+  :playlist_id The Spotify ID for the playlist.
+  :fields Filters for the query: a comma-separated list of the fields to return.
+  :market An ISO 3166-1 alpha-2 country code or the string from_token. 
+  
+  Example: (get-playlist {:playlist_id \"3cEYpjA9oz9GiPac4AsH4n\" :fields \"items(added_by.id,track(name,href,album(name,href)))\" :market \"ES\"} \"OAUTH-TOKEN\")"
   (partial get-request "playlists/playlist_id"))
 
 (def get-playlist-tracks
-  ""
+  "Get full details of the tracks of a playlist owned by a Spotify user.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :playlist_id. Optional keys are :fields, :market, :limit and :offset
+  :playlist_id The Spotify ID for the playlist.
+  :fields Filters for the query: a comma-separated list of the fields to return.
+  :market An ISO 3166-1 alpha-2 country code or the string from_token. 
+  :limit The maximum number of tracks to return. Default: 100. Minimum: 1. Maximum: 100.
+  :offset The index of the first track to return. Default: 0 (the first object).
+  
+  Example: (get-playlist-tracks {:playlist_id \"3cEYpjA9oz9GiPac4AsH4n\" :fields \"items(added_by.id,track(name,href,album(name,href)))\" :market \"ES\" :limit 50 :offset 5} \"OAUTH-TOKEN\")"
   (partial get-request "playlists/playlist_id/tracks"))
 
+;TODO: Request body
 (def remove-tracks-from-playlist
-  ""
+  "Remove one or more tracks from a user’s playlist.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :playlist_id and :tracks.
+  :playlist_id The Spotify ID for the playlist.
+  :tracks An array of objects containing Spotify URIs of the tracks to remove.
+  
+  Example: (remove-tracks-from-playlist {} \"OAUTH-TOKEN\")"
   (partial delete-request "playlists/playlist_id/tracks"))
 
+;TODO: Request body
 (def reorder-playlist-tracks
   ""
   (partial put-request "playlists/playlist_id/tracks"))
 
 (def replace-playlist-tracks
-  ""
+  "Replace all the tracks in a playlist, overwriting its existing tracks.
+  This powerful request can be useful for replacing tracks,
+  re-ordering existing tracks, or clearing the playlist.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :playlist_id. Optional key in the map is :uris.
+  :playlist_id The Spotify ID for the playlist.
+  :uris  A comma-separated list of Spotify track URIs to set. 
+  
+  Example: (replace-playlist-tracks {:playlist_id \"3cEYpjA9oz9GiPac4AsH4n\"} \"OAUTH-TOKEN\")"
   (partial put-request "playlists/playlist_id/tracks"))
 
+;TODO: Request body
 (def upload-playlist-cover-image
   ""
   (partial put-request "playlists/playlist_id/images"))
