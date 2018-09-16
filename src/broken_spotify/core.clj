@@ -629,30 +629,65 @@
 
 ; Tracks API Endpoints
 (def get-audio-analysis
-  ""
+  "Get a detailed audio analysis for a single track identified by its unique Spotify ID.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :id.
+  :id The Spotify ID for the track.
+
+  Example: (get-audio-analysis {:id \"06AKEBrKUckW0KREUWRnvT\"} \"OAUTH-TOKEN\")"
   (partial get-request "audio-analysis/id"))
 
 (def get-track-audio-features
-  ""
+  "Get audio feature information for a single track identified by its unique Spotify ID.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :id.
+  :id The Spotify ID for the track.
+
+  Example: (get-track-audio-features {:id \"06AKEBrKUckW0KREUWRnvT\"} \"OAUTH-TOKEN\")"
   (partial get-request "audio-features/id"))
 
 (def get-tracks-audio-features
-  ""
+  "Get audio features for multiple tracks based on their Spotify IDs.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :ids.
+  :ids A comma-separated list of the Spotify IDs for the tracks. Maximum: 100 IDs.
+  
+  Example: (get-tracks-audio-features {:ids \"4JpKVNYnVcJ8tuMKjAj50A,2NRANZE9UCmPAS5XVbXL40\"} \"OAUTH-TOKEN\")"
   (partial get-request "audio-features/"))
 
 (def get-tracks
-  ""
+  "Get Spotify catalog information for multiple tracks based on their Spotify IDs.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :ids. Optional key is :market
+  :ids A comma-separated list of the Spotify IDs for the tracks. Maximum: 50 IDs.
+  :market An ISO 3166-1 alpha-2 country code or the string from_token.
+  
+  Example: (get-tracks {:ids \"3n3Ppam7vgaVa1iaRUc9Lp,3twNvmDtFQtAd5gMKedhLD\" :market \"ES\"} \"OAUTH-TOKEN\")"
   (partial get-request "tracks/"))
 
 (def get-track
-  ""
+  "Get Spotify catalog information for a single track identified by its unique Spotify ID.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :id. Optional key in the map is :market.
+  :id The Spotify ID for the track.
+  :market  An ISO 3166-1 alpha-2 country code or the string from_token. 
+  
+  Example: (get-track {:id \"3n3Ppam7vgaVa1iaRUc9Lp\" :market \"ES\"} \"OAUTH-TOKEN\")"
   (partial get-request "tracks/id"))
 
 ; Users Profile API Endpoints
 (def get-current-user-profile
-  ""
+  "Get detailed profile information about the current user (including the current user’s username).
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  
+  Example: (get-current-user-profile {} \"OAUTH-TOKEN\")"
   (partial get-request "me/"))
 
 (def get-user-profile
-  ""
+  "Get public profile information about a Spotify user.
+  Takes two arguments, a map with the path and query parameters and a oauth-token.
+  Required key in the map is :user_id.
+  :user_id The user’s Spotify user ID.
+  
+  Example: (get-user-profile {:user_id \"wizzler\"} \"OAUTH-TOKEN\")"
   (partial get-request "users/user_id"))
